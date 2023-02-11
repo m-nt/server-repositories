@@ -4,7 +4,9 @@ services:
   pypi:
     image: pypiserver/pypiserver:latest
     ports:
-      - "8001:8080"
+      - target: 8080
+        published: 8001
+        mode: host
     volumes:
       - "./packages:/data/packages"
     deploy:
@@ -19,7 +21,9 @@ services:
   docker:
     image: registry:2
     ports:
-      - "5000:5000"
+      - target: 5000
+        published: 5000
+        mode: host
     volumes:
       - "./registry:/var/lib/registry"
       - "./docker-auth:/auth"

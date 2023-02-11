@@ -11,6 +11,7 @@ Help() {
     echo " -v| show this version"
     echo " -a| add authentication"
     echo " -A| jsut add user"
+    echo " -U| jsut update services"
 }
 mkdir -p ./docker-auth/
 mkdir -p ./packages/
@@ -38,7 +39,8 @@ add_user() {
 }
 auth="0"
 add="0"
-while getopts :haAvp:u: flag; do
+update="0"
+while getopts :haAUvp:u: flag; do
     case "${flag}" in
     h)
         Help
@@ -53,6 +55,9 @@ while getopts :haAvp:u: flag; do
         ;;
     A)
         add="1"
+        ;;
+    U)
+        update="1"
         ;;
     u) username=${OPTARG} ;;
     p) pass=${OPTARG} ;;
@@ -72,6 +77,9 @@ with_auth() {
     docker stack deploy -c docker-compose-auth.yml repositories
 }
 
+if [ "$update" == "1" ]; then
+    docker stack deploy -c docker-compose-auth.yml repositories
+fi
 if [ "$add" == "1" ]; then
     if [ "$pass" == "" ] && [ "$username" == "" ]; then
         echo "adding user with default credentials, [admin,admin]..."
@@ -84,7 +92,7 @@ if [ "$add" == "1" ]; then
 fi
 
 if [ "$auth" == "0" ]; then
-    docker stack deploy -c docker-compose-simple.yml repositories
+    docker stack deploy -c docker-compose-simple.yml app
 else
     with_auth
 fi
