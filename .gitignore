@@ -1,2 +1,5 @@
 packages
-auth
+certs
+pypi-auth
+docker-auth
+registry
